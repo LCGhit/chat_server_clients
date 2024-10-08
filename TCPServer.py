@@ -2,7 +2,7 @@ import socket
 from threading import Thread
 
 
-def newThread(client_socket):
+def newThread(client_socket, client_address):
     while True:
         request = client_socket.recv(1024)
         request = request.decode('utf-8')  # convert bytes to string
@@ -13,7 +13,7 @@ def newThread(client_socket):
             # send response to the client which acknowledges that the
             # connection should be closed and break out of the loop
             client_socket.send('quitted'.encode('utf-8'))
-            return
+            break
 
         print(f'Received: {request}')
         responseMsg = request.upper()
@@ -21,7 +21,7 @@ def newThread(client_socket):
         response = responseMsg.encode('utf-8')  # convert string to bytes
         # convert and send accept response to the client
         client_socket.send(response)
-    # close connection socket with the client
+        # close connection socket with the client
     client_socket.close()
     print('Connection to client closed')
 
@@ -29,13 +29,13 @@ def newThread(client_socket):
 def run_server():
     # create a socket object
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     # set server IP and Port
     server_ip = '127.0.0.1'
     port = 8000
 
     # bind the socket to a specific address and port
     server.bind((server_ip, port))
+
     # listen for incoming connections
     server.listen()
     print(f'Listening on {server_ip}:{port}')
@@ -46,7 +46,8 @@ def run_server():
         print(f'Accepted connection from {client_address[0]}:{client_address[1]}')
 
         # receive data from the client
-        Thread(target=newThread(client_socket))
+        thread = Thread(target=newThread, args=(client_socket, client_address))
+        thread.start()
 
     # close server socket
     server.close()
