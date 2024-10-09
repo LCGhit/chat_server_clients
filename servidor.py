@@ -8,24 +8,24 @@ def handle_client(client_socket, client_id):
         try:
             # Receber mensagens do cliente
             msg = client_socket.recv(1024).decode('utf-8')
-            
-            if msg.startswith('MSGALL'):
+
+            if msg.startswith('MSGALL'.upper()):
                 # Envia mensagem para todos os clientes
                 broadcast_message(client_id, msg[7:])
-            elif msg.startswith('MSG'):
+            elif msg.upper().startswith('MSG'):
                 # Envia mensagem para um cliente específico
                 target_client_id = msg.split()[1]
                 text = ' '.join(msg.split()[2:])
                 send_private_message(client_id, target_client_id, text)
-            elif msg.startswith('LOGOFF'):
+            elif msg.upper().startswith('LOGOFF'):
                 # Cliente está se desconectando
                 remove_client(client_id)
                 break
-            elif msg.startswith('BAN'):
+            elif msg.upper().startswith('BAN'):
                 # Banir um cliente
                 target_client_id = msg.split()[1]
                 ban_client(client_id, target_client_id)
-            elif msg.startswith('STATUS'):
+            elif msg.upper().startswith('STATUS'):
                 # Envia a lista de clientes online
                 send_status(client_id)
         except:
@@ -81,6 +81,6 @@ def start_server(server_port):
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_id))
         client_thread.start()
 
-if __name__ == "__main__":
-    server_port = int(input("Enter server port: "))
+if __name__ == '__main__':
+    server_port = int(input('Enter server port: '))
     start_server(server_port)

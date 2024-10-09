@@ -8,7 +8,7 @@ def receive_messages(client_socket):
             message = client_socket.recv(1024).decode('utf-8')
             print(message)
         except:
-            print("Connection lost")
+            print('Connection lost')
             client_socket.close()
             break
 
@@ -25,17 +25,17 @@ def start_client(server_ip, server_port, client_id):
 
     while True:
         # Enviar mensagens para o servidor
-        msg = input()
+        msg = input('Your message: ')
         client_socket.send(msg.encode('utf-8'))
-        
+
         if msg.startswith('LOGOFF'):
             break
 
     client_socket.close()
 
-if __name__ == "__main__":
-    server_ip = input("Enter server IP: ")
-    server_port = int(input("Enter server port: "))
-    client_id = input("Enter your client ID: ")
+if __name__ == '__main__':
+    server_ip = input('Enter server IP: ')
+    server_port = int(input('Enter server port: '))
+    client_id = input('Enter your client ID: ')
 
     start_client(server_ip, server_port, client_id)
