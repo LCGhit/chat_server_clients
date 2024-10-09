@@ -1,6 +1,11 @@
 import socket
 
 
+def send_message(self, destination):
+    # input message and send it to the server
+    msg = input('Enter message: ')
+    self.send(msg.encode('utf-8')[:1024])
+
 def run_client():
     # create a socket object
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,9 +16,7 @@ def run_client():
     client.connect((server_ip, server_port))
 
     while True:
-        # input message and send it to the server
-        msg = input('Enter message: ')
-        client.send(msg.encode('utf-8')[:1024])
+        send_message(client, 'asrt')
 
         # receive message from the server
         response = client.recv(1024)
