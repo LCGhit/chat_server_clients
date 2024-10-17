@@ -6,7 +6,7 @@ def receive_messages(client_socket):
         try:
             # Receber mensagens do servidor
             message = client_socket.recv(1024).decode('utf-8')
-            print(message)
+            print(f'\n{message}\nYour message: ', end='')
         except:
             print('Connection lost')
             client_socket.close()

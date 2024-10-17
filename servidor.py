@@ -9,7 +9,7 @@ def handle_client(client_socket, client_id):
             # Receber mensagens do cliente
             msg = client_socket.recv(1024).decode('utf-8')
 
-            if msg.startswith('MSGALL'.upper()):
+            if msg.upper().startswith('MSGALL'.upper()):
                 # Envia mensagem para todos os clientes
                 broadcast_message(client_id, msg[7:])
             elif msg.upper().startswith('MSG'):
@@ -49,6 +49,7 @@ def send_private_message(sender_id, target_id, message):
 def ban_client(sender_id, target_id):
     if target_id in clients:
         clients[target_id].send('You have been banned from the chat'.encode('utf-8'))
+        broadcast_message(sender_id, f'{target_id} has been banned')
         remove_client(target_id)
 
 def send_status(client_id):
@@ -61,7 +62,7 @@ def remove_client(client_id):
         print(f'Client {client_id} disconnected')
         clients[client_id].close()
         del clients[client_id]
-        broadcast_message(client_id, f'{client_id} has logged off')
+        broadcast_message(client_id, '[Logged off]')
 
 def start_server(server_port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
